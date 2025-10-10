@@ -17,32 +17,40 @@ public class HomeScreen {
 
     static ArrayList<Transaction> transactions = new ArrayList<>();
 
-
     public static void main(String[] args) {
         name = getInput(scanner, "Please enter name: ");
 
-        showHomeMenu();
-        String input = getInput(scanner, "Enter the corresponding letter, then press enter: ");
+        boolean isRunning = true;
+        while (isRunning) {
+            showHomeMenu();
+            String input = getInput(scanner, "Enter the corresponding letter, then press enter: ");
 
-        switch (input.toUpperCase()) {
-            case "D":
-                makeDeposit();
-                break;
-            case "P":
-                makePayment();
-                break;
-            case "L":
-                viewLedger();
-                break;
-            case "X":
-                System.out.println("Goodbye!");
-                createCSV();
-                break;
-            default:
-                System.out.println("Error. Try again!");
+            switch (input.toUpperCase()) {
+                case "D":
+                    makeDeposit();
+                    break;
+                case "P":
+                    makePayment();
+                    break;
+                case "L":
+                    viewLedger();
+                    break;
+                case "X":
+                    System.out.println("Goodbye!");
+                    createCSV();
+                    System.out.println("-------------------------");
+                    isRunning = false;
+                    pause();
+                    break;
+                default:
+                    System.out.println("Error. Try again!");
 
+            }
         }
+    }
 
+    public static String pause(){
+        return getInput(scanner, "\nPress Enter to continue...");
     }
 
     public static void showHomeMenu() {
@@ -69,7 +77,6 @@ public class HomeScreen {
         transactionType = "Deposit";
 
         transactions.add(new Transaction(today, transactionType, depositAmount));
-        System.out.println("Deposit of " + "$" + depositAmount + " complete.");
         record = today + "|" + transactionType + "|" + depositAmount;
 
         System.out.println("Deposit of $" + depositAmount + " completed successfully");
@@ -85,53 +92,59 @@ public class HomeScreen {
 
         transactions.add(new Transaction(today, transactionType, vendorName, description, paymentAmount));
         System.out.println("Payment of $" + paymentAmount + " sent to " + vendorName + " for " + description + " successfully");
+        showHomeMenu();
     }
 
     private static void viewLedger() {
         LocalDateTime now = LocalDateTime.now();
         String today = now.format(fmt);
+        boolean isViewing = true;
 
-        System.out.println("""
-                       Ledger Menu
-                Select from the options below:
-                A) View All Transactions
-                D) View All Deposits
-                P) View All Payments
-                R) View Reports
-                H) Return to Home Screen
-                """);
+        while(isViewing) {
+            System.out.println("""
+                           Ledger Menu
+                    Select from the options below:
+                    A) View All Transactions
+                    D) View All Deposits
+                    P) View All Payments
+                    R) View Reports
+                    H) Return to Home Screen
+                    """);
 
-        String input = getInput(scanner, "Enter the corresponding letter, then press enter:");
+            String input = getInput(scanner, "Enter the corresponding letter, then press enter:");
 
-        switch (input.toUpperCase()) {
-            case "A":
-                displayTransactions(transactions);
-                break;
-            case "D":
-                displayDeposits();
-                break;
-            case "P":
-                displayPayments();
-                break;
-            case "R":
-                viewReports();
-                break;
-            case "H":
-                showHomeMenu();
-                break;
-            default:
-                System.out.println("Error. Try again!");
-
+            switch (input.toUpperCase()) {
+                case "A":
+                    displayTransactions(transactions);
+                    break;
+                case "D":
+                    displayDeposits();
+                    break;
+                case "P":
+                    displayPayments();
+                    break;
+                case "R":
+                    viewReports();
+                    break;
+                case "H":
+                    showHomeMenu();
+                    isViewing = false;
+                    break;
+                default:
+                    System.out.println("Error. Try again!");
+            }
         }
     }
 
     private static void displayTransactions(ArrayList<Transaction> transactions) {
         if (transactions.isEmpty()) {
             System.out.println("No transaction history");
+            return;
         }
         for (Transaction t : transactions) {
             System.out.println(t);
         }
+        pause();
     }
 
     private static void displayDeposits() {
@@ -149,6 +162,8 @@ public class HomeScreen {
                 System.out.println(d);
             }
         }
+        pause();
+
 
     }
 
@@ -166,6 +181,7 @@ public class HomeScreen {
                 System.out.println(p);
             }
         }
+        pause();
     }
 
     private static void viewReports() {
@@ -179,7 +195,7 @@ public class HomeScreen {
                 0) Back
                 """);
 
-        String input = getInput(scanner, "Enter the corresponding letter, then press enter: ");
+        String input = getInput(scanner, "Enter the corresponding number, then press enter: ");
 
         switch (input.toUpperCase()) {
             case "1":
@@ -224,7 +240,7 @@ public class HomeScreen {
         ArrayList<Transaction> vendorList = new ArrayList<>();
         String vendorSearch = getInput(scanner, "What is the name of the vendor you want to search for? ");
         for (Transaction t : transactions) {
-            if (t.getVendorName().equalsIgnoreCase(vendorSearch)) {
+            if (t.getVendorName() != null && t.getVendorName().equalsIgnoreCase(vendorSearch)) {
                 vendorList.add(t);
             }
         }
