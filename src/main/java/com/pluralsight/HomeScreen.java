@@ -60,7 +60,7 @@ public class HomeScreen {
                 D) Add Deposit
                 P) Make a Payment
                 L) Ledger
-                X) Exit 
+                X) Exit
                 """);
     }
 
@@ -252,6 +252,7 @@ public class HomeScreen {
                 System.out.println(v);
             }
         }
+        pause();
     }
 
 
