@@ -8,13 +8,11 @@ import java.util.Scanner;
 public class HomeScreen {
     static Scanner scanner = new Scanner(System.in);
     static LocalDateTime now = LocalDateTime.now();
-    static DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd '|' HH:mm:ss");
+    static DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'|'HH:mm:ss");
     static String transactionType;
     static String record;
     static String today = now.format(fmt);
     static String name;
-
-
 
     public static void main(String[] args) {
         name = getInput(scanner, "Please enter name: ");
@@ -27,7 +25,7 @@ public class HomeScreen {
         }
 
         showMenu();
-        String input = getInput(scanner, "Enter the corresponding letter, then press enter.");
+        String input = getInput(scanner, "Enter the corresponding letter, then press enter: ");
 
         switch (input.toUpperCase()){
             case "D":
@@ -46,8 +44,6 @@ public class HomeScreen {
                 System.out.println("Error. Try again!");
 
         }
-
-
 
     }
 
