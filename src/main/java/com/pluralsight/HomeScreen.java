@@ -2,6 +2,7 @@ package com.pluralsight;
 
 import java.io.*;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -13,6 +14,13 @@ public class HomeScreen {
     static String transactionType;
     static String record;
     static String today = now.format(fmt);
+    static LocalDateTime dateObj = LocalDateTime.parse(today, fmt);
+    static int year = dateObj.getYear();
+    static Month month = dateObj.getMonth();
+
+
+
+
     static String name;
 
     static ArrayList<Transaction> transactions = new ArrayList<>();
@@ -48,11 +56,12 @@ public class HomeScreen {
             }
         }
     }
-
+// pause between entries
     public static String pause(){
         return getInput(scanner, "\nPress Enter to continue...");
     }
 
+    //show home menu
     public static void showHomeMenu() {
         System.out.println("""
                 Welcome!
@@ -69,6 +78,7 @@ public class HomeScreen {
         return scanner.nextLine();
     }
 
+    //make deposit
     public static void makeDeposit() {
         LocalDateTime now = LocalDateTime.now();
         String today = now.format(fmt);
@@ -81,13 +91,13 @@ public class HomeScreen {
 
         System.out.println("Deposit of $" + depositAmount + " completed successfully");
     }
-
+//make payment
     private static void makePayment() {
         LocalDateTime now = LocalDateTime.now();
         String today = now.format(fmt);
         String vendorName = getInput(scanner, "Who would you like to pay? ");
         String description = getInput(scanner, "What is the item/service you are purchasing? ");
-        int paymentAmount = Integer.parseInt(getInput(scanner, "How much is it? $"));
+        double paymentAmount = Double.parseDouble(getInput(scanner, "How much is it? $"));
         transactionType = "Payment";
 
         transactions.add(new Transaction(today, transactionType, vendorName, description, paymentAmount));
@@ -95,6 +105,7 @@ public class HomeScreen {
         showHomeMenu();
     }
 
+    //view ledger menu
     private static void viewLedger() {
         LocalDateTime now = LocalDateTime.now();
         String today = now.format(fmt);
@@ -102,7 +113,7 @@ public class HomeScreen {
 
         while(isViewing) {
             System.out.println("""
-                           Ledger Menu
+                    Ledger Menu:
                     Select from the options below:
                     A) View All Transactions
                     D) View All Deposits
@@ -136,6 +147,7 @@ public class HomeScreen {
         }
     }
 
+    //view transactions
     private static void displayTransactions(ArrayList<Transaction> transactions) {
         if (transactions.isEmpty()) {
             System.out.println("No transaction history");
@@ -147,6 +159,7 @@ public class HomeScreen {
         pause();
     }
 
+    //view deposits
     private static void displayDeposits() {
         ArrayList<Transaction> deposits = new ArrayList<>();
         for (Transaction t : transactions) {
@@ -167,6 +180,7 @@ public class HomeScreen {
 
     }
 
+    //view deposits
     private static void displayPayments() {
         ArrayList<Transaction> payments = new ArrayList<>();
         for (Transaction t : transactions) {
@@ -225,15 +239,80 @@ public class HomeScreen {
     }
 
     private static void previousYear() {
+        ArrayList<Transaction> prevYear = new ArrayList<>();
+        int previousYear = year - 1;
+
+        for (Transaction t: transactions){
+            LocalDateTime dateTime = LocalDateTime.parse(t.getDateTime(),fmt);
+            int transactionYear = dateTime.getYear();
+            if (previousYear == transactionYear){
+                prevYear.add(t);
+            }
+        }
+        if (prevYear.isEmpty()){
+            System.out.println("There is no history from " + previousYear );
+        }else {
+            for (Transaction p : prevYear) {
+                System.out.println(p);
+            }
+        }
     }
 
     private static void yearToDate() {
+        ArrayList<Transaction> yearToDate = new ArrayList<>();
+        for (Transaction t: transactions){
+            LocalDateTime dateTime = LocalDateTime.parse(t.getDateTime(),fmt);
+            int transactionYear = dateTime.getYear();
+            if (year == transactionYear ) {
+                yearToDate.add(t);
+            }
+        }
+        if (yearToDate.isEmpty()){
+            System.out.println("There is no history from " + year);
+        } else {
+            for (Transaction y : yearToDate) {
+                System.out.println(y);
+            }
+        }
+
     }
 
     private static void previousMonth() {
+        Month previousMonth = month.minus(1);
+        ArrayList<Transaction> prevMonth = new ArrayList<>();
+
+        for (Transaction t : transactions) {
+            LocalDateTime dateTime = LocalDateTime.parse(t.getDateTime(), fmt);
+            Month transactionMonth = dateTime.getMonth();
+            if (previousMonth.equals(transactionMonth)) {
+               prevMonth.add(t);
+            }
+        }
+        if (prevMonth.isEmpty()){
+            System.out.println("There is no transaction history from " + previousMonth);
+        }else {
+            for (Transaction m : prevMonth) {
+                System.out.println(m);
+            }
+        }
     }
 
     private static void monthToDate() {
+        ArrayList<Transaction> monthToDate = new ArrayList<>();
+        for (Transaction t: transactions){
+            LocalDateTime dateTime = LocalDateTime.parse(t.getDateTime(), fmt);
+            Month transactionMonth = dateTime.getMonth();
+            if (month.equals(transactionMonth)){
+                monthToDate.add(t);
+            }
+        }
+        if (monthToDate.isEmpty()){
+            System.out.println("There is no tranaction history from " + month);
+        } else {
+            for (Transaction m : monthToDate) {
+                System.out.println(m);
+            }
+        }
     }
 
     private static void searchByVendor() {

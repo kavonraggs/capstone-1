@@ -1,6 +1,10 @@
 package com.pluralsight;
 
 public class Transaction {
+    public String getDateTime() {
+        return dateTime;
+    }
+
     private String dateTime;
 
     public String getTransactionType() {
@@ -34,6 +38,10 @@ public class Transaction {
         this.description = "N/A";
     }
 
+    @Override
+    public String toString(){
+        return dateTime + "|" + transactionType + "|" + vendorName + "|" + description + "|" + amount;
+    }
 
     public String toCSV() {
         return dateTime + "|" + transactionType + "|" + vendorName + "|" + description + "|" + amount;
