@@ -19,8 +19,6 @@ public class HomeScreen {
     static Month month = dateObj.getMonth();
 
 
-
-
     static String name;
 
     static ArrayList<Transaction> transactions = new ArrayList<>();
@@ -56,8 +54,9 @@ public class HomeScreen {
             }
         }
     }
-// pause between entries
-    public static void pause(){
+
+    // pause between entries
+    public static void pause() {
         getInput(scanner, "\nPress Enter to continue...");
     }
 
@@ -91,7 +90,8 @@ public class HomeScreen {
 
         System.out.println("Deposit of $" + depositAmount + " completed successfully");
     }
-//make payment
+
+    //make payment
     private static void makePayment() {
         LocalDateTime now = LocalDateTime.now();
         String today = now.format(fmt);
@@ -109,7 +109,7 @@ public class HomeScreen {
     private static void viewLedger() {
         boolean isViewing = true;
 
-        while(isViewing) {
+        while (isViewing) {
             System.out.println("""
                     Ledger Menu:
                     Select from the options below:
@@ -237,38 +237,38 @@ public class HomeScreen {
     }
 
     private static void previousYear() {
-        ArrayList<Transaction> prevYear = new ArrayList<>();
+        ArrayList<Transaction> prevYearList = new ArrayList<>();
         int previousYear = year - 1;
 
-        for (Transaction t: transactions){
-            LocalDateTime dateTime = LocalDateTime.parse(t.getDateTime(),fmt);
+        for (Transaction t : transactions) {
+            LocalDateTime dateTime = LocalDateTime.parse(t.getDateTime(), fmt);
             int transactionYear = dateTime.getYear();
-            if (previousYear == transactionYear){
-                prevYear.add(t);
+            if (previousYear == transactionYear) {
+                prevYearList.add(t);
             }
         }
-        if (prevYear.isEmpty()){
-            System.out.println("There is no history from " + previousYear );
-        }else {
-            for (Transaction p : prevYear) {
+        if (prevYearList.isEmpty()) {
+            System.out.println("There is no history from " + previousYear);
+        } else {
+            for (Transaction p : prevYearList) {
                 System.out.println(p);
             }
         }
     }
 
     private static void yearToDate() {
-        ArrayList<Transaction> yearToDate = new ArrayList<>();
-        for (Transaction t: transactions){
-            LocalDateTime dateTime = LocalDateTime.parse(t.getDateTime(),fmt);
+        ArrayList<Transaction> yearToDateList = new ArrayList<>();
+        for (Transaction t : transactions) {
+            LocalDateTime dateTime = LocalDateTime.parse(t.getDateTime(), fmt);
             int transactionYear = dateTime.getYear();
-            if (year == transactionYear ) {
-                yearToDate.add(t);
+            if (year == transactionYear) {
+                yearToDateList.add(t);
             }
         }
-        if (yearToDate.isEmpty()){
+        if (yearToDateList.isEmpty()) {
             System.out.println("There is no history from " + year);
         } else {
-            for (Transaction y : yearToDate) {
+            for (Transaction y : yearToDateList) {
                 System.out.println(y);
             }
         }
@@ -277,37 +277,42 @@ public class HomeScreen {
 
     private static void previousMonth() {
         Month previousMonth = month.minus(1);
-        ArrayList<Transaction> prevMonth = new ArrayList<>();
+        int previousYear = year;
+        if (month == Month.JANUARY) {
+            previousYear = year - 1;
+        }
+
+        ArrayList<Transaction> prevMonthList = new ArrayList<>();
 
         for (Transaction t : transactions) {
             LocalDateTime dateTime = LocalDateTime.parse(t.getDateTime(), fmt);
             Month transactionMonth = dateTime.getMonth();
-            if (previousMonth.equals(transactionMonth)) {
-               prevMonth.add(t);
+            if (previousMonth.equals(transactionMonth) && dateTime.getYear() == previousYear) {
+                prevMonthList.add(t);
             }
         }
-        if (prevMonth.isEmpty()){
+        if (prevMonthList.isEmpty()) {
             System.out.println("There is no transaction history from " + previousMonth);
-        }else {
-            for (Transaction m : prevMonth) {
+        } else {
+            for (Transaction m : prevMonthList) {
                 System.out.println(m);
             }
         }
     }
 
     private static void monthToDate() {
-        ArrayList<Transaction> monthToDate = new ArrayList<>();
-        for (Transaction t: transactions){
+        ArrayList<Transaction> monthToDateList = new ArrayList<>();
+        for (Transaction t : transactions) {
             LocalDateTime dateTime = LocalDateTime.parse(t.getDateTime(), fmt);
             Month transactionMonth = dateTime.getMonth();
-            if (month.equals(transactionMonth)){
-                monthToDate.add(t);
+            if (month.equals(transactionMonth)) {
+                monthToDateList.add(t);
             }
         }
-        if (monthToDate.isEmpty()){
+        if (monthToDateList.isEmpty()) {
             System.out.println("There is no transaction history from " + month);
         } else {
-            for (Transaction m : monthToDate) {
+            for (Transaction m : monthToDateList) {
                 System.out.println(m);
             }
         }
@@ -331,7 +336,6 @@ public class HomeScreen {
         }
         pause();
     }
-
 
 
     private static void createCSV() {
