@@ -1,26 +1,12 @@
 package com.pluralsight;
 
 public class Transaction {
-    public String getDateTime() {
-        return dateTime;
-    }
 
+
+    private double amount;
     private String dateTime;
-
-    public String getTransactionType() {
-        return transactionType;
-    }
-
-    private String transactionType;
-    String name;
-    double amount;
-
-    public String getVendorName() {
-        return vendorName;
-    }
-
-    String vendorName;
-    String description;
+    private String vendorName;
+    private String description;
 
     public Transaction(String dateTime, String description, String vendorName, double amount){
         this.dateTime = dateTime;
@@ -30,12 +16,16 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public Transaction(String dateTime, double amount){
-        this.dateTime = dateTime;
-        //this.transactionType = transactionType;
-        this.amount = amount;
-        this.vendorName = "N/A";
-        this.description = "N/A";
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public String getVendorName() {
+        return vendorName;
     }
 
     @Override
@@ -44,6 +34,6 @@ public class Transaction {
     }
 
     public String toCSV() {
-        return dateTime + "|" + description + "|" + vendorName + "|"  + "| $" + amount;
+        return dateTime + "|" + description + "|" + vendorName + "|" + amount;
     }
 }

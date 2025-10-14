@@ -1,6 +1,7 @@
 package com.pluralsight;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
@@ -88,7 +89,7 @@ public class HomeScreen {
 
 
         transactions.add(new Transaction(today, description, vendorName, depositAmount));
-        record = today +  "|" + depositAmount;
+        record = today + "|" + description + "|" + vendorName + "|" + depositAmount;
 
         System.out.println("Deposit of $" + depositAmount + " completed successfully");
     }
@@ -101,9 +102,10 @@ public class HomeScreen {
         String description = getInput(scanner, "What is the item/service you are purchasing? ");
         double paymentAmount = Double.parseDouble(getInput(scanner, "How much is it? $"));
         transactionType = "Payment";
+        paymentAmount = -Math.abs(paymentAmount);
 
         transactions.add(new Transaction(today, description, vendorName, paymentAmount));
-        System.out.println("Payment of $" + paymentAmount + " sent to " + vendorName + " for " + description + " successfully");
+        System.out.println("Payment of " + String.format("($%.2f)", Math.abs(paymentAmount)) + " sent to " + vendorName + " for " + description + " successfully");
         showHomeMenu();
     }
 
@@ -164,7 +166,7 @@ public class HomeScreen {
     private static void displayDeposits() {
         ArrayList<Transaction> deposits = new ArrayList<>();
         for (Transaction t : transactions) {
-            if (t.getTransactionType().equalsIgnoreCase("Deposit")) {
+            if (t.getAmount() > 0) {
                 deposits.add(t);
 
             }
@@ -188,7 +190,7 @@ public class HomeScreen {
     private static void displayPayments() {
         ArrayList<Transaction> payments = new ArrayList<>();
         for (Transaction t : transactions) {
-            if (t.getTransactionType().equalsIgnoreCase("Payment")) {
+            if (t.getAmount() < 0) {
                 payments.add(t);
             }
         }
@@ -212,6 +214,7 @@ public class HomeScreen {
                 3) Year to Date
                 4) Previous Year
                 5) Search by Vendor
+                6) Custom Search
                 0) Back
                 """);
 
@@ -233,6 +236,8 @@ public class HomeScreen {
             case "5":
                 searchByVendor();
                 break;
+            case "6":
+                customSearch();
             case "0":
                 viewLedger();
                 break;
@@ -355,12 +360,45 @@ public class HomeScreen {
         pause();
     }
 
+    public static void customSearch() {
+        String startDateSearch = getInput(scanner, "Start date: ");
+        String endDateSearch = getInput(scanner, "End date: ");
+        String descriptionSearch = getInput(scanner, "Description: ");
+        String vendorSearch = getInput(scanner, "Vendor: ");
+        Double amountSearch = Double.parseDouble(getInput(scanner, "Amount: "));
+
+    }
+
+
+    public static ArrayList<Transaction> filteredSearch(String startDateSearch, String endDateSearch, String description, String vendor, double amount) {
+        ArrayList<Transaction> filteredList = new ArrayList<>();
+
+        LocalDateTime startDate = startDateSearch.isEmpty() ? null : LocalDateTime.parse(startDateSearch, fmt);
+        LocalDateTime endDate = endDateSearch.isEmpty() ? null : LocalDateTime.parse(endDateSearch, fmt);
+
+        for (Transaction t : transactions) {
+            LocalDateTime transactionDate = LocalDateTime.parse(t.getDateTime(), fmt);
+            if (transactionDate.isAfter(startDate) && transactionDate.isBefore(endDate)) {
+                filteredList.add(t);
+            }
+
+
+        }
+    }
+
+
 
     private static void createCSV() {
+        File file = new File("transactions.csv");
+        boolean fileExists = file.exists();
         try (BufferedWriter buffWriter = new BufferedWriter(new FileWriter("transactions.csv", true))) {
-            buffWriter.write(name + "'s transaction history");
-            buffWriter.newLine();
-            buffWriter.write("Date|Time|Description|Vendor|Amount");
+
+            if (!fileExists) {
+                buffWriter.write(name + "'s transaction history");
+                buffWriter.newLine();
+                buffWriter.write("Date|Time|Description|Vendor|Amount");
+                buffWriter.newLine();
+            }
 
             transactions.sort((t1, t2) -> t2.getDateTime().compareTo(t1.getDateTime()));
 
