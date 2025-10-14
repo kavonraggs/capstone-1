@@ -1,7 +1,6 @@
 package com.pluralsight;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
@@ -365,8 +364,11 @@ public class HomeScreen {
         String endDateSearch = getInput(scanner, "End date: ");
         String descriptionSearch = getInput(scanner, "Description: ");
         String vendorSearch = getInput(scanner, "Vendor: ");
-        Double amountSearch = Double.parseDouble(getInput(scanner, "Amount: "));
+        String amountSearch = getInput(scanner, "Amount: ");
+        double amountInput = amountSearch.isEmpty() ? 0 :  Double.parseDouble(amountSearch);
 
+        ArrayList<Transaction> results = filteredSearch(startDateSearch, endDateSearch, descriptionSearch, vendorSearch, amountInput);
+        displayTransactions(results);
     }
 
 
@@ -378,14 +380,18 @@ public class HomeScreen {
 
         for (Transaction t : transactions) {
             LocalDateTime transactionDate = LocalDateTime.parse(t.getDateTime(), fmt);
-            if (transactionDate.isAfter(startDate) && transactionDate.isBefore(endDate)) {
+
+            boolean dateMatch = (startDate == null || !transactionDate.isBefore(startDate)) && (endDate == null || !transactionDate.isAfter(endDate));
+            boolean vendorMatch = vendor.isEmpty() || t.getVendorName().equalsIgnoreCase(vendor);
+            boolean descriptionMatch = description.isEmpty() || t.getDescription().toLowerCase().contains(description.toLowerCase());
+            boolean amountMatch = (amount == 0 || Math.abs(t.getAmount() - amount) < 0.01);
+
+            if (dateMatch && vendorMatch && descriptionMatch && amountMatch){
                 filteredList.add(t);
             }
-
-
         }
-    }
-
+return filteredList;
+}
 
 
     private static void createCSV() {

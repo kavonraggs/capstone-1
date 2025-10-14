@@ -1,12 +1,18 @@
 package com.pluralsight;
 
+@SuppressWarnings("ClassCanBeRecord")
 public class Transaction {
 
 
-    private double amount;
-    private String dateTime;
-    private String vendorName;
-    private String description;
+    private final double amount;
+    private final String dateTime;
+    private final String vendorName;
+
+    public String getDescription() {
+        return description;
+    }
+
+    private final String description;
 
     public Transaction(String dateTime, String description, String vendorName, double amount){
         this.dateTime = dateTime;
