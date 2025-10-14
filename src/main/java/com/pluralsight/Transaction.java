@@ -22,17 +22,17 @@ public class Transaction {
     String vendorName;
     String description;
 
-    public Transaction(String dateTime, String transactionType, String vendorName, String description, double amount){
+    public Transaction(String dateTime, String description, String vendorName, double amount){
         this.dateTime = dateTime;
-        this.transactionType = transactionType;
+        //this.transactionType = transactionType;
         this.vendorName = vendorName;
         this.description = description;
         this.amount = amount;
     }
 
-    public Transaction(String dateTime, String transactionType, double amount){
+    public Transaction(String dateTime, double amount){
         this.dateTime = dateTime;
-        this.transactionType = transactionType;
+        //this.transactionType = transactionType;
         this.amount = amount;
         this.vendorName = "N/A";
         this.description = "N/A";
@@ -40,10 +40,10 @@ public class Transaction {
 
     @Override
     public String toString(){
-        return dateTime + "|" + transactionType + "|" + vendorName + "|" + description + "|" + amount;
+        return dateTime + "|" + description + "|" + vendorName + "| $" + amount;
     }
 
     public String toCSV() {
-        return dateTime + "|" + transactionType + "|" + vendorName + "|" + description + "|" + amount;
+        return dateTime + "|" + description + "|" + vendorName + "|"  + "| $" + amount;
     }
 }

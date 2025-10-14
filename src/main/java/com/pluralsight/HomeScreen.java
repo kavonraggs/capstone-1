@@ -82,11 +82,13 @@ public class HomeScreen {
         LocalDateTime now = LocalDateTime.now();
         String today = now.format(fmt);
 
+        String vendorName = getInput(scanner, "Who is the deposit from?");
         double depositAmount = Double.parseDouble(getInput(scanner, "How much would you like to deposit? $"));
-        transactionType = "Deposit";
+        String description = "Deposit";
 
-        transactions.add(new Transaction(today, transactionType, depositAmount));
-        record = today + "|" + transactionType + "|" + depositAmount;
+
+        transactions.add(new Transaction(today, description, vendorName, depositAmount));
+        record = today +  "|" + depositAmount;
 
         System.out.println("Deposit of $" + depositAmount + " completed successfully");
     }
@@ -100,7 +102,7 @@ public class HomeScreen {
         double paymentAmount = Double.parseDouble(getInput(scanner, "How much is it? $"));
         transactionType = "Payment";
 
-        transactions.add(new Transaction(today, transactionType, vendorName, description, paymentAmount));
+        transactions.add(new Transaction(today, description, vendorName, paymentAmount));
         System.out.println("Payment of $" + paymentAmount + " sent to " + vendorName + " for " + description + " successfully");
         showHomeMenu();
     }
@@ -136,7 +138,7 @@ public class HomeScreen {
                     viewReports();
                     break;
                 case "H":
-                    showHomeMenu();
+                    //showHomeMenu();
                     isViewing = false;
                     break;
                 default:
@@ -151,6 +153,7 @@ public class HomeScreen {
             System.out.println("No transaction history");
             return;
         }
+        transactions.sort((t1, t2) -> t2.getDateTime().compareTo(t1.getDateTime()));
         for (Transaction t : transactions) {
             System.out.println(t);
         }
@@ -166,9 +169,12 @@ public class HomeScreen {
 
             }
         }
+
         if (deposits.isEmpty()) {
             System.out.println("You have made no deposits");
         } else {
+            deposits.sort((t1, t2) -> t2.getDateTime().compareTo(t1.getDateTime()));
+
             for (Transaction d : deposits) {
                 System.out.println(d);
             }
@@ -189,6 +195,8 @@ public class HomeScreen {
         if (payments.isEmpty()) {
             System.out.println("No payments have been made");
         } else {
+            payments.sort((t1, t2) -> t2.getDateTime().compareTo(t1.getDateTime()));
+
             for (Transaction p : payments) {
                 System.out.println(p);
             }
@@ -250,6 +258,8 @@ public class HomeScreen {
         if (prevYearList.isEmpty()) {
             System.out.println("There is no history from " + previousYear);
         } else {
+            prevYearList.sort((t1, t2) -> t2.getDateTime().compareTo(t1.getDateTime()));
+
             for (Transaction p : prevYearList) {
                 System.out.println(p);
             }
@@ -268,6 +278,8 @@ public class HomeScreen {
         if (yearToDateList.isEmpty()) {
             System.out.println("There is no history from " + year);
         } else {
+            yearToDateList.sort((t1, t2) -> t2.getDateTime().compareTo(t1.getDateTime()));
+
             for (Transaction y : yearToDateList) {
                 System.out.println(y);
             }
@@ -294,6 +306,8 @@ public class HomeScreen {
         if (prevMonthList.isEmpty()) {
             System.out.println("There is no transaction history from " + previousMonth);
         } else {
+            prevMonthList.sort((t1, t2) -> t2.getDateTime().compareTo(t1.getDateTime()));
+
             for (Transaction m : prevMonthList) {
                 System.out.println(m);
             }
@@ -312,6 +326,8 @@ public class HomeScreen {
         if (monthToDateList.isEmpty()) {
             System.out.println("There is no transaction history from " + month);
         } else {
+            monthToDateList.sort((t1, t2) -> t2.getDateTime().compareTo(t1.getDateTime()));
+
             for (Transaction m : monthToDateList) {
                 System.out.println(m);
             }
@@ -330,6 +346,8 @@ public class HomeScreen {
         if (vendorList.isEmpty()) {
             System.out.println("There is no payment history with " + vendorSearch);
         } else {
+            vendorList.sort((t1, t2) -> t2.getDateTime().compareTo(t1.getDateTime()));
+
             for (Transaction v : vendorList) {
                 System.out.println(v);
             }
@@ -339,9 +357,12 @@ public class HomeScreen {
 
 
     private static void createCSV() {
-        try (BufferedWriter buffWriter = new BufferedWriter(new FileWriter("transactions.csv"))) {
+        try (BufferedWriter buffWriter = new BufferedWriter(new FileWriter("transactions.csv", true))) {
             buffWriter.write(name + "'s transaction history");
             buffWriter.newLine();
+            buffWriter.write("Date|Time|Description|Vendor|Amount");
+
+            transactions.sort((t1, t2) -> t2.getDateTime().compareTo(t1.getDateTime()));
 
             for (Transaction t : transactions) {
                 buffWriter.write(t.toCSV());
@@ -353,6 +374,8 @@ public class HomeScreen {
         }
 
     }
+
+
 
 
 }
