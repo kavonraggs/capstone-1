@@ -108,7 +108,6 @@ public class HomeScreen {
     //view ledger menu
     private static void viewLedger() {
         LocalDateTime now = LocalDateTime.now();
-        String today = now.format(fmt);
         boolean isViewing = true;
 
         while(isViewing) {
@@ -307,7 +306,7 @@ public class HomeScreen {
             }
         }
         if (monthToDate.isEmpty()){
-            System.out.println("There is no tranaction history from " + month);
+            System.out.println("There is no transaction history from " + month);
         } else {
             for (Transaction m : monthToDate) {
                 System.out.println(m);
