@@ -57,8 +57,8 @@ public class HomeScreen {
         }
     }
 // pause between entries
-    public static String pause(){
-        return getInput(scanner, "\nPress Enter to continue...");
+    public static void pause(){
+        getInput(scanner, "\nPress Enter to continue...");
     }
 
     //show home menu
@@ -107,7 +107,6 @@ public class HomeScreen {
 
     //view ledger menu
     private static void viewLedger() {
-        LocalDateTime now = LocalDateTime.now();
         boolean isViewing = true;
 
         while(isViewing) {
