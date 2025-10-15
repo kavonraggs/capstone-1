@@ -26,6 +26,8 @@ public class HomeScreen {
     public static void main(String[] args) {
         name = getInput(scanner, "Please enter name: ");
 
+        loadTransactions();
+
         boolean isRunning = true;
         while (isRunning) {
             showHomeMenu();
@@ -396,15 +398,11 @@ return filteredList;
 
     private static void createCSV() {
         File file = new File("transactions.csv");
-        boolean fileExists = file.exists();
-        try (BufferedWriter buffWriter = new BufferedWriter(new FileWriter("transactions.csv", true))) {
-
-            if (!fileExists) {
+        try (BufferedWriter buffWriter = new BufferedWriter(new FileWriter("transactions.csv", false))) {
                 buffWriter.write(name + "'s transaction history");
                 buffWriter.newLine();
                 buffWriter.write("Date|Time|Description|Vendor|Amount");
                 buffWriter.newLine();
-            }
 
             transactions.sort((t1, t2) -> t2.getDateTime().compareTo(t1.getDateTime()));
 
@@ -417,6 +415,44 @@ return filteredList;
             System.out.println("File could not be created");
         }
 
+    }
+
+    public static void loadTransactions(){
+        File file = new File("transactions.csv");
+        if (!file.exists()){
+            System.out.println("No previous transactions found");
+            return;
+        }
+        try (BufferedReader buffReader = new BufferedReader(new FileReader(file))){
+            String line;
+
+
+            while ((line = buffReader.readLine()) != null) {
+                if ((line.contains("transaction history") || line.contains("Date|Time|Description|Vendor|Amount"))){
+                    continue;
+                }
+
+                String [] parts = line.split("\\|");
+
+                if (parts.length < 5) {
+                    continue;
+                }
+
+                String dateTime = parts[0].trim() + "|" + parts[1].trim();
+                String description = parts[2].trim();
+                String vendor = parts[3].trim();
+                double amount = Double.parseDouble(parts[4].trim());
+
+                transactions.add(new Transaction(dateTime, description, vendor, amount));
+                System.out.println("Transactions loaded");
+            }
+
+            transactions.sort((t1, t2) -> t2.getDateTime().compareTo(t1.getDateTime()));
+        } catch (IOException e) {
+            System.out.println("Error reading file");
+        } catch (NumberFormatException e) {
+            System.out.println("Error getting numbers in file");
+        }
     }
 
 
