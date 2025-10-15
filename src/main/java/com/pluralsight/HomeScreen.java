@@ -12,7 +12,6 @@ public class HomeScreen {
     static LocalDateTime now = LocalDateTime.now();
     static DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'|'HH:mm:ss");
     static String transactionType;
-    static String record;
     static String today = now.format(fmt);
     static LocalDateTime dateObj = LocalDateTime.parse(today, fmt);
     static int year = dateObj.getYear();
@@ -84,15 +83,15 @@ public class HomeScreen {
         LocalDateTime now = LocalDateTime.now();
         String today = now.format(fmt);
 
-        String vendorName = getInput(scanner, "Who is the deposit from?");
+        String vendorName = getInput(scanner, "Who is the deposit from? ");
         double depositAmount = Double.parseDouble(getInput(scanner, "How much would you like to deposit? $"));
         String description = "Deposit";
 
 
         transactions.add(new Transaction(today, description, vendorName, depositAmount));
-        record = today + "|" + description + "|" + vendorName + "|" + depositAmount;
-
+        createCSV();
         System.out.println("Deposit of $" + depositAmount + " completed successfully");
+        pause();
     }
 
     //make payment
@@ -106,7 +105,9 @@ public class HomeScreen {
         paymentAmount = -Math.abs(paymentAmount);
 
         transactions.add(new Transaction(today, description, vendorName, paymentAmount));
+        createCSV();
         System.out.println("Payment of " + String.format("($%.2f)", Math.abs(paymentAmount)) + " sent to " + vendorName + " for " + description + " successfully");
+        pause();
         showHomeMenu();
     }
 
@@ -270,6 +271,7 @@ public class HomeScreen {
                 System.out.println(p);
             }
         }
+        pause();
     }
 
     private static void yearToDate() {
@@ -290,7 +292,7 @@ public class HomeScreen {
                 System.out.println(y);
             }
         }
-
+        pause();
     }
 
     private static void previousMonth() {
@@ -318,6 +320,7 @@ public class HomeScreen {
                 System.out.println(m);
             }
         }
+        pause();
     }
 
     private static void monthToDate() {
@@ -338,6 +341,7 @@ public class HomeScreen {
                 System.out.println(m);
             }
         }
+        pause();
     }
 
     private static void searchByVendor() {
@@ -392,7 +396,9 @@ public class HomeScreen {
                 filteredList.add(t);
             }
         }
-return filteredList;
+        pause();
+        return filteredList;
+
 }
 
 
@@ -420,6 +426,7 @@ return filteredList;
         File file = new File("transactions.csv");
         if (!file.exists()){
             System.out.println("No previous transactions found");
+            pause();
             return;
         }
         try (BufferedReader buffReader = new BufferedReader(new FileReader(file))){
@@ -444,6 +451,7 @@ return filteredList;
 
                 transactions.add(new Transaction(dateTime, description, vendor, amount));
                 System.out.println("Transactions loaded");
+                pause();
             }
 
             transactions.sort((t1, t2) -> t2.getDateTime().compareTo(t1.getDateTime()));
