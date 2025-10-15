@@ -397,7 +397,6 @@ return filteredList;
 
 
     private static void createCSV() {
-        File file = new File("transactions.csv");
         try (BufferedWriter buffWriter = new BufferedWriter(new FileWriter("transactions.csv", false))) {
                 buffWriter.write(name + "'s transaction history");
                 buffWriter.newLine();
