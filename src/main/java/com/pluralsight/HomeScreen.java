@@ -240,6 +240,7 @@ public class HomeScreen {
                 break;
             case "6":
                 customSearch();
+                break;
             case "0":
                 viewLedger();
                 break;
@@ -415,7 +416,7 @@ public class HomeScreen {
                 filteredList.add(t);
             }
         }
-        pause();
+
         return filteredList;
 
 }
