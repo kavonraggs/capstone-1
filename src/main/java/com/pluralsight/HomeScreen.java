@@ -381,8 +381,27 @@ public class HomeScreen {
     public static ArrayList<Transaction> filteredSearch(String startDateSearch, String endDateSearch, String description, String vendor, double amount) {
         ArrayList<Transaction> filteredList = new ArrayList<>();
 
-        LocalDateTime startDate = startDateSearch.isEmpty() ? null : LocalDateTime.parse(startDateSearch, fmt);
-        LocalDateTime endDate = endDateSearch.isEmpty() ? null : LocalDateTime.parse(endDateSearch, fmt);
+        LocalDateTime startDate = null;
+        LocalDateTime endDate = null;
+
+        try {
+            if(!startDateSearch.isEmpty()){
+                if (startDateSearch.length() == 10) {
+                    startDateSearch += "|00:00:00";
+                }
+                startDate = LocalDateTime.parse(startDateSearch, fmt);
+            }
+            if (!endDateSearch.isEmpty()){
+                if(endDateSearch.length() == 10){
+                    endDateSearch += "|23:59:59";
+                }
+                endDate = LocalDateTime.parse(endDateSearch, fmt);
+            }
+        } catch (Exception e) {
+            System.out.println("Invalid date");
+            return filteredList;
+        }
+
 
         for (Transaction t : transactions) {
             LocalDateTime transactionDate = LocalDateTime.parse(t.getDateTime(), fmt);
@@ -450,11 +469,10 @@ public class HomeScreen {
                 double amount = Double.parseDouble(parts[4].trim());
 
                 transactions.add(new Transaction(dateTime, description, vendor, amount));
-                System.out.println("Transactions loaded");
-                pause();
             }
-
             transactions.sort((t1, t2) -> t2.getDateTime().compareTo(t1.getDateTime()));
+            System.out.println("Transactions loaded");
+
         } catch (IOException e) {
             System.out.println("Error reading file");
         } catch (NumberFormatException e) {
