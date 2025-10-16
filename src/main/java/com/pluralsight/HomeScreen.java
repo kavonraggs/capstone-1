@@ -367,8 +367,8 @@ public class HomeScreen {
     }
 
     public static void customSearch() {
-        String startDateSearch = getInput(scanner, "Start date: ");
-        String endDateSearch = getInput(scanner, "End date: ");
+        String startDateSearch = getInput(scanner, "Start date (yyyy-mm-dd): ");
+        String endDateSearch = getInput(scanner, "End date (yyyy-mm-dd): ");
         String descriptionSearch = getInput(scanner, "Description: ");
         String vendorSearch = getInput(scanner, "Vendor: ");
         String amountSearch = getInput(scanner, "Amount: ");
