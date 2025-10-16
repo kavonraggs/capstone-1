@@ -16,16 +16,15 @@ public class HomeScreen {
     static LocalDateTime dateObj = LocalDateTime.parse(today, fmt);
     static int year = dateObj.getYear();
     static Month month = dateObj.getMonth();
-
-
     static String name;
 
     static ArrayList<Transaction> transactions = new ArrayList<>();
 
     public static void main(String[] args) {
+        System.out.println("Welcome!");
         name = getInput(scanner, "Please enter name: ");
-
         loadTransactions();
+
 
         boolean isRunning = true;
         while (isRunning) {
@@ -64,7 +63,6 @@ public class HomeScreen {
     //show home menu
     public static void showHomeMenu() {
         System.out.println("""
-                Welcome!
                 Select from the options below:
                 D) Add Deposit
                 P) Make a Payment
@@ -84,8 +82,8 @@ public class HomeScreen {
         String today = now.format(fmt);
 
         String vendorName = getInput(scanner, "Who is the deposit from? ");
+        String description = getInput(scanner, "Description: ");
         double depositAmount = Double.parseDouble(getInput(scanner, "How much would you like to deposit? $"));
-        String description = "Deposit";
 
 
         transactions.add(new Transaction(today, description, vendorName, depositAmount));
@@ -184,8 +182,6 @@ public class HomeScreen {
             }
         }
         pause();
-
-
     }
 
     //view deposits
@@ -246,10 +242,7 @@ public class HomeScreen {
                 break;
             default:
                 System.out.println("Error. Try again!");
-
         }
-
-
     }
 
     private static void previousYear() {
@@ -316,7 +309,6 @@ public class HomeScreen {
             System.out.println("There is no transaction history from " + previousMonth);
         } else {
             prevMonthList.sort((t1, t2) -> t2.getDateTime().compareTo(t1.getDateTime()));
-
             for (Transaction m : prevMonthList) {
                 System.out.println(m);
             }
@@ -366,18 +358,30 @@ public class HomeScreen {
         pause();
     }
 
+    /**
+     * Collects user inputs for custom search. Uses inputs with filteredSearch method to find matches.
+     */
     public static void customSearch() {
         String startDateSearch = getInput(scanner, "Start date (yyyy-mm-dd): ");
         String endDateSearch = getInput(scanner, "End date (yyyy-mm-dd): ");
         String descriptionSearch = getInput(scanner, "Description: ");
         String vendorSearch = getInput(scanner, "Vendor: ");
         String amountSearch = getInput(scanner, "Amount: ");
-        double amountInput = amountSearch.isEmpty() ? 0 :  Double.parseDouble(amountSearch);
+        double amountInput = amountSearch.isEmpty() ? 0 : Double.parseDouble(amountSearch);
 
         ArrayList<Transaction> results = filteredSearch(startDateSearch, endDateSearch, descriptionSearch, vendorSearch, amountInput);
         displayTransactions(results);
     }
 
+    /**
+     * Adds time to date so time input not needed. Checks each field for a match, adds to list, then returns and prints list.
+     * @param startDateSearch
+     * @param endDateSearch
+     * @param description
+     * @param vendor
+     * @param amount
+     * @return
+     */
 
     public static ArrayList<Transaction> filteredSearch(String startDateSearch, String endDateSearch, String description, String vendor, double amount) {
         ArrayList<Transaction> filteredList = new ArrayList<>();
@@ -386,14 +390,14 @@ public class HomeScreen {
         LocalDateTime endDate = null;
 
         try {
-            if(!startDateSearch.isEmpty()){
+            if (!startDateSearch.isEmpty()) {
                 if (startDateSearch.length() == 10) {
                     startDateSearch += "|00:00:00";
                 }
                 startDate = LocalDateTime.parse(startDateSearch, fmt);
             }
-            if (!endDateSearch.isEmpty()){
-                if(endDateSearch.length() == 10){
+            if (!endDateSearch.isEmpty()) {
+                if (endDateSearch.length() == 10) {
                     endDateSearch += "|23:59:59";
                 }
                 endDate = LocalDateTime.parse(endDateSearch, fmt);
@@ -412,22 +416,23 @@ public class HomeScreen {
             boolean descriptionMatch = description.isEmpty() || t.getDescription().toLowerCase().contains(description.toLowerCase());
             boolean amountMatch = (amount == 0 || Math.abs(t.getAmount() - amount) < 0.01);
 
-            if (dateMatch && vendorMatch && descriptionMatch && amountMatch){
+            if (dateMatch && vendorMatch && descriptionMatch && amountMatch) {
                 filteredList.add(t);
             }
         }
-
         return filteredList;
+    }
 
-}
 
-
+    /**
+     * Creates Transaction CSV file using arrayList of transactions
+     */
     private static void createCSV() {
         try (BufferedWriter buffWriter = new BufferedWriter(new FileWriter("transactions.csv", false))) {
-                buffWriter.write(name + "'s transaction history");
-                buffWriter.newLine();
-                buffWriter.write("Date|Time|Description|Vendor|Amount");
-                buffWriter.newLine();
+            buffWriter.write(name + "'s transaction history");
+            buffWriter.newLine();
+            buffWriter.write("Date|Time|Description|Vendor|Amount");
+            buffWriter.newLine();
 
             transactions.sort((t1, t2) -> t2.getDateTime().compareTo(t1.getDateTime()));
 
@@ -439,26 +444,27 @@ public class HomeScreen {
         } catch (IOException e) {
             System.out.println("File could not be created");
         }
-
     }
 
-    public static void loadTransactions(){
+    /**
+     * Looks for previous Transactions.csv file and adds it to the arrayList to continue adding new ones
+     */
+    public static void loadTransactions() {
         File file = new File("transactions.csv");
-        if (!file.exists()){
+        if (!file.exists()) {
             System.out.println("No previous transactions found");
             pause();
             return;
         }
-        try (BufferedReader buffReader = new BufferedReader(new FileReader(file))){
+        try (BufferedReader buffReader = new BufferedReader(new FileReader(file))) {
             String line;
 
-
             while ((line = buffReader.readLine()) != null) {
-                if ((line.contains("transaction history") || line.contains("Date|Time|Description|Vendor|Amount"))){
+                if ((line.contains("transaction history") || line.contains("Date|Time|Description|Vendor|Amount"))) {
                     continue;
                 }
 
-                String [] parts = line.split("\\|");
+                String[] parts = line.split("\\|");
 
                 if (parts.length < 5) {
                     continue;
@@ -480,8 +486,4 @@ public class HomeScreen {
             System.out.println("Error getting numbers in file");
         }
     }
-
-
-
-
 }
