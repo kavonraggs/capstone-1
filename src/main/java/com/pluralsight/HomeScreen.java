@@ -375,12 +375,12 @@ public class HomeScreen {
 
     /**
      * Adds time to date so time input not needed. Checks each field for a match, adds to list, then returns and prints list.
-     * @param startDateSearch
-     * @param endDateSearch
-     * @param description
-     * @param vendor
-     * @param amount
-     * @return
+     * @param startDateSearch Field used to search transactions for Start Date user input
+     * @param endDateSearch Field used to search transactions for End Date user input
+     * @param description Field used to search transactions for Description user input
+     * @param vendor Field used to search transactions for Vendor user input
+     * @param amount Field used to search transactions for Amount
+     * @return Returns list of all transactions that match all fields entered
      */
 
     public static ArrayList<Transaction> filteredSearch(String startDateSearch, String endDateSearch, String description, String vendor, double amount) {
