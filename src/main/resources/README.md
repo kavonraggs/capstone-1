@@ -54,4 +54,13 @@ Date: 10/15/2025
 ## Custom Search
 ![Custom Search](images/custom-search.png)
 
+---
+# Interesting Code
+![Interesting Code](images/interesting.png)
+- Date Match : If user start date input is empty or after start date & end date is empty or before user entered end date = True
+- Vendor Match: If user vendor input is empty or match is found = True
+- Description Match: If user description input is empty or matches a description found = True
+- Amount Match: If user amount input is empty or within one cent of a match = True
+- If-Else: If all boolean fields are true then add the entry to the list of filtered transactions
+
 

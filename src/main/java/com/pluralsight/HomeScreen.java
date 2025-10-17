@@ -50,7 +50,6 @@ public class HomeScreen {
                     break;
                 default:
                     System.out.println("Error. Try again!");
-
             }
         }
     }
@@ -84,7 +83,6 @@ public class HomeScreen {
         String vendorName = getInput(scanner, "Who is the deposit from? ");
         String description = getInput(scanner, "Description: ");
         double depositAmount = Double.parseDouble(getInput(scanner, "How much would you like to deposit? $"));
-
 
         transactions.add(new Transaction(today, description, vendorName, depositAmount));
         createCSV();
