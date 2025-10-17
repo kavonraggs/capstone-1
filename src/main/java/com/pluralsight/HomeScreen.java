@@ -104,7 +104,6 @@ public class HomeScreen {
         createCSV();
         System.out.println("Payment of " + String.format("($%.2f)", Math.abs(paymentAmount)) + " sent to " + vendorName + " for " + description + " successfully");
         pause();
-        showHomeMenu();
     }
 
     //view ledger menu
